@@ -1,0 +1,38 @@
+-- Hey user! the script below is made by FARHAN0075. Making this script modular was a lot of effort Please conseder it.
+
+local UserInputService = game:GetService("UserInputService")
+local player = game.Players.LocalPlayer
+
+local function onKeyPress(input, gameProcessed)
+	if gameProcessed then return end
+
+	local character = player.Character
+	local humanoidRootPart = character and character:FindFirstChild("HumanoidRootPart")
+
+	if humanoidRootPart then
+		if input.KeyCode == Enum.KeyCode.D then
+			-- Orientate the player model facing axis x
+			humanoidRootPart.CFrame = CFrame.new(humanoidRootPart.Position) * CFrame.Angles(0, math.rad(-90), 0)
+		elseif input.KeyCode == Enum.KeyCode.A then
+			-- Orientate the player model facing axis -x
+			humanoidRootPart.CFrame = CFrame.new(humanoidRootPart.Position) * CFrame.Angles(0, math.rad(90), 0)
+		end
+	end
+end
+
+local function onCharacterAdded(character)
+	-- Reconnect the key press function for the new character
+	UserInputService.InputBegan:Connect(onKeyPress)
+end
+
+-- Connect the function to the input began event for the first character
+UserInputService.InputBegan:Connect(onKeyPress)
+
+-- Connect the function to the CharacterAdded event to handle respawns
+player.CharacterAdded:Connect(onCharacterAdded)
+
+-- Handle the initial character
+if player.Character then
+	onCharacterAdded(player.Character)
+end
+
